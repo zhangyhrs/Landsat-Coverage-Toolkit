@@ -191,13 +191,13 @@ pFiles.add(button('生成所选时段接合表 GeoJSON',makeGeoJSON));
 pFiles.add(button('生成所选时段产品清单 CSV',makeCSV));
 pFiles.add(button('导出完整 SHP（到 Google Drive / Tasks）',makeSHP));
 pFiles.add(txt('SHP 包含 .shp / .shx / .dbf / .prj 等配套文件。请从 Drive 下载同名前缀的全部文件，并在本地压缩为 ZIP；单独的 .cpg 不是矢量接合表。','#64748B','11px'));
-pFiles.add(txt('GEE Assets 直接保存（推荐用于后续选景下载）','#475569'));
-var assetIdBox = ui.Textbox({
-  placeholder:'projects/你的GEE项目/assets/Landsat_Index_2025_Q3',
-  style:{stretch:'horizontal'}
-});
-pFiles.add(assetIdBox);
-pFiles.add(button('保存当前接合表到 GEE Assets（Tasks）',makeAsset));
+pFiles.add(txt('一键保存到 GEE Assets（自动新建 Landsat_Coverage_Indexes 文件夹）','#475569'));
+var assetRootSelect=pick([{label:'正在读取可用 Assets 根目录……',value:'__loading__'}],'__loading__');
+pFiles.add(assetRootSelect);
+var assetAutoInfo=txt('正在检测当前账号可使用的 GEE Assets 目录……','#64748B','11px');
+pFiles.add(assetAutoInfo);
+pFiles.add(button('刷新 Assets 项目列表',loadAssetRoots));
+pFiles.add(button('自动创建目录并保存当前接合表（Tasks）',makeAsset));
 pFiles.add(linkPanel);
 pFiles.add(txt('GeoJSON 是单文件完整矢量格式；SHP 是多文件格式。多时段 PNG 请逐个选择生成。','#64748B','11px'));
 
@@ -432,20 +432,71 @@ function makeSHP(){
   });
   linkPanel.add(txt('已在 Tasks 创建 SHP 导出任务。请在 GEE Tasks 中点击 RUN；任务完成后到 Google Drive 的 GEE_Landsat_Index 文件夹中下载同名前缀的 .shp、.shx、.dbf、.prj（以及可能的 .cpg），本地一起压缩为 ZIP。只下载 .cpg 不可使用。','#0E766E'));
 }
+// 自动发现有权访问的 GEE Assets 根目录；不依赖手动输入 Project ID。
+function loadAssetRoots(){
+  assetAutoInfo.setValue('正在读取 GEE Assets 根目录……');
+  ee.data.getAssetRoots(function(roots,error){
+    if(error){
+      assetAutoInfo.setValue('自动读取失败：'+error+'。请先在 GEE Assets 中 ADD A PROJECT 并确保有写入权限，再刷新。');
+      return;
+    }
+    var items=(roots||[]).filter(function(x){return x&&x.id;}).map(function(x){
+      return {label:x.id,value:x.id.replace(/\\/$/,'')};
+    });
+    if(!items.length){
+      assetRootSelect.items().reset([{label:'未发现可用 Assets 根目录',value:'__none__'}]);
+      assetRootSelect.setValue('__none__',false);
+      assetAutoInfo.setValue('未发现 Assets 根目录。请先在左侧 Assets 点击 ADD A PROJECT，添加你拥有写入权限的 GEE 项目，然后点击刷新。');
+      return;
+    }
+    assetRootSelect.items().reset(items);
+    assetRootSelect.setValue(items[0].value,false);
+    assetAutoInfo.setValue('已找到 '+items.length+' 个 Assets 根目录。将自动新建 Landsat_Coverage_Indexes 文件夹，接合表按当前时段保存。');
+  });
+}
 function makeAsset(){
   var r=chosen();if(!r)return;
-  var assetId=(assetIdBox.getValue()||'').trim();
-  if(assetId.indexOf('projects/') !== 0 || assetId.indexOf('/assets/') < 0){
-    linkPanel.add(txt('请填写完整 GEE Asset ID，例如 projects/你的项目/assets/Landsat_Index_2025_Q3。','#B45309'));
+  var root=assetRootSelect.getValue();
+  if(!root||root==='__none__'||root==='__loading__'){
+    linkPanel.add(txt('请先刷新 Assets 项目列表，选择拥有写入权限的根目录。','#B45309'));
     return;
   }
-  var prefix='Index_Asset_'+r.period.key;
-  Export.table.toAsset({
-    collection:getIndex(r.analysis.col),
-    description:prefix,
-    assetId:assetId
+  var folder=root.replace(/\\/$/,'')+'/Landsat_Coverage_Indexes';
+  // 保存时自动加时间戳，避免反复导出相同时段产生重名冲突。
+  var file='Landsat_Index_'+r.period.key+'_'+Date.now();
+  var assetId=folder+'/'+file;
+  function createTask(){
+    try{
+      Export.table.toAsset({
+        collection:getIndex(r.analysis.col),
+        description:file,
+        assetId:assetId,
+        overwrite:false
+      });
+      linkPanel.add(txt('已自动创建保存任务。请到 GEE 右上角 Tasks 点击 RUN。任务完成后的 Asset ID：\n'+assetId+'\n复制这个路径到“已有产品选景下载”工具即可。','#0E766E'));
+      print('选景下载工具所用接合表 Asset ID：',assetId);
+    }catch(e){
+      linkPanel.add(txt('创建导出任务失败：'+e,'#B45309'));
+    }
+  }
+  assetAutoInfo.setValue('正在检查保存文件夹……');
+  ee.data.getAsset(folder,function(existing,error){
+    if(existing){
+      assetAutoInfo.setValue('已找到保存文件夹：'+folder);
+      createTask();
+      return;
+    }
+    // 仅在文件夹不存在时创建；其他权限/网络错误会在创建时报告。
+    ee.data.createAsset({type:'FOLDER'},folder,false,null,function(created,createError){
+      if(createError){
+        assetAutoInfo.setValue('无法自动创建文件夹：'+createError);
+        return;
+      }
+      assetAutoInfo.setValue('已创建文件夹：'+folder);
+      createTask();
+    });
   });
-  linkPanel.add(txt('GEE Asset 任务已创建。请到 Tasks 点击 RUN；完成后复制 Asset ID 至已有产品选景 GUI。','#0E766E'));
 }
+loadAssetRoots();
 print('全国 Landsat 覆盖分析 V3.0 已初始化。');
 print('提示：GAUL 2015 为历史行政区数据；数据体量为理论估算；多选结果逐项计算。');
