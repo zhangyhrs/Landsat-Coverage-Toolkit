@@ -59,6 +59,12 @@
 
 ![实际 GEE 覆盖率分析界面 / Actual GEE coverage analysis interface](assets/gee-runtime.webp)
 
+### GEE Assets 自动保存接合表 / Direct save to GEE Assets
+
+![GEE Assets 自动保存接合表（真实运行截图） / GEE Asset auto-save runtime](assets/gee-asset-export-runtime.webp)
+
+The saved Table Asset can now be selected directly in the updated [Product Selector GUI](gee/product_selector.js), without manually copying the Asset ID. Tasks still need to be started and completed in Earth Engine.
+
 *实际运行截图：2025 年第三季度产品覆盖率分析，折叠菜单、地图分布和统计结果。 / Actual GEE runtime screenshot showing the collapsible GUI, map and coverage summary.*
 
 ### QGIS 影像接合表成果 / QGIS Scene Footprints
@@ -107,6 +113,7 @@ Landsat-Coverage-Toolkit/
 ├── .gitignore
 ├── assets/
 │   ├── workflow.svg
+│   ├── gee-asset-export-runtime.webp
 │   ├── gee-runtime.webp
 │   ├── qgis-scene-index.webp
 │   └── gui-preview.svg
