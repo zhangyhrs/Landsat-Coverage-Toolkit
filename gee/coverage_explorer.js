@@ -1,5 +1,5 @@
 /***************************************************************
- * 全国 Landsat 8/9 影像覆盖分析平台 V3.0
+ * 全国 Landsat 8/9 影像覆盖分析平台 V3.1
  * GEE Code Editor JavaScript
  * 全国省级默认西藏；省级/GAUL二级行政单位；季度/月度多选
  * 产品景数、覆盖面积/率、Path/Row、理论数据量、接合表、PNG
@@ -90,13 +90,25 @@ function addLink(p, text, url) {
 }
 
 side.add(heading('全国 Landsat 产品覆盖分析'));
-side.add(txt('LANDSAT COVERAGE EXPLORER  |  V3.0','#64748B','10px'));
+side.add(txt('LANDSAT COVERAGE EXPLORER  |  V3.1','#64748B','10px'));
 side.add(txt('默认西藏自治区；一级菜单可展开和收起。','#64748B','11px'));
 
 // ============= 三、数据源与时间多选 =============
 var pSource = section('01  数据源与时间',true);
 var source = pick(['Landsat 8','Landsat 9','Landsat 8 + 9'],'Landsat 8');
 caption(pSource,'产品来源',source);
+var cloudLimitSelect=pick([
+  {label:'不限云量（全部产品）',value:'ALL'},
+  {label:'≤ 80%',value:'80'},
+  {label:'≤ 50%',value:'50'},
+  {label:'≤ 30%',value:'30'},
+  {label:'≤ 20%',value:'20'},
+  {label:'≤ 10%',value:'10'},
+  {label:'≤ 5%',value:'5'},
+  {label:'≤ 0%',value:'0'}
+],'ALL');
+caption(pSource,'整景云量上限（先筛选后分析）',cloudLimitSelect);
+pSource.add(txt('依据 CLOUD_COVER 元数据筛选整景。筛选后的影像参与覆盖率、景数、分幅、接合表和数据量统计；不等于无云像元覆盖率。','#64748B','11px'));
 var years=[];for(var yy=2026;yy>=2013;yy--)years.push(String(yy));
 var year = pick(years,DEFAULT_YEAR);caption(pSource,'检索年份',year);
 var mode = pick(['全年','季度多选','月份多选'],'季度多选');
@@ -258,11 +270,12 @@ function getIndex(col){
     });
   }));
 }
-function computePeriod(base,roi,p,scale){
+function computePeriod(base,roi,p,scale,cloudLimit){
   var y=parseInt(year.getValue(),10);
   var st=ee.Date.fromYMD(y,p.m1,1);
   var en=p.m2===13?ee.Date.fromYMD(y+1,1,1):ee.Date.fromYMD(y,p.m2,1);
-  var col=base.filterBounds(roi).filterDate(st,en);
+  var rawCol=base.filterBounds(roi).filterDate(st,en);
+  var col=cloudLimit===null?rawCol:rawCol.filter(ee.Filter.lte('CLOUD_COVER',cloudLimit));
   // 零影像确保空集合不报错。
   var zeros=ee.Image.constant(0).rename('coverage').toByte();
   var coverage=col.map(validMask).merge(ee.ImageCollection([zeros]))
@@ -275,7 +288,7 @@ function computePeriod(base,roi,p,scale){
   return {
     col:col,cover:coverage,
     summary:ee.Dictionary({
-      scenes:col.size(),
+      scenes:col.size(),rawScenes:rawCol.size(),
       frames:col.distinct(['WRS_PATH','WRS_ROW']).size(),
       total:areas.get('total'),
       covered:areas.get('covered')
@@ -298,9 +311,12 @@ function runAll(){
   var run=++activeRun;
   var roi=area.fc.geometry(),base=collection(),scale=parseInt(statScale.getValue(),10);
   var bandN=estimateBands.getValue().indexOf('2个 QA')>=0?9:7;
+  var cloudValue=cloudLimitSelect.getValue();
+  var cloudLimit=cloudValue==='ALL'?null:Number(cloudValue);
+  var cloudCaption=cloudLimit===null?'不限云量':'整景云量 ≤ '+cloudLimit+'%';
   records={};resultPanel.clear();linkPanel.clear();resetLayers();
   setSelect(periodSelect,[{label:'分析运行中',value:'__none__'}],'__none__');
-  runStatus.setValue('开始分析 '+ps.length+' 个时段，逐项计算以降低并发压力……');
+  runStatus.setValue('开始分析 '+ps.length+' 个时段（'+cloudCaption+'），逐项计算以降低并发压力……');
   map.centerObject(area.fc);
   addManaged(area.fc.style({color:'F18B32',fillColor:'00000000',width:2}),{},'研究区：'+area.name,true);
   var output=[];
@@ -309,10 +325,10 @@ function runAll(){
     if(run!==activeRun)return;
     if(i>=ps.length){
       runStatus.setValue('全部完成：'+ps.length+' 个时段。可展开图层管理、成图与下载。');
-      resultPanel.add(txt('以下结果按所选时段逐项计算；面积为近似统计。','#64748B','11px'));
+      resultPanel.add(txt('筛选条件：'+cloudCaption+'。覆盖率为筛选后产品空间覆盖，并非无云像元覆盖率；面积为近似统计。','#64748B','11px'));
       // 属性均在客户端构建，不触发新的覆盖面积计算。
       var rows=output.map(function(r){
-        return ee.Feature(null,{period:r.key,scenes:r.scenes,frames:r.frames,
+        return ee.Feature(null,{period:r.key,scenes:r.scenes,raw_scenes:r.rawScenes,frames:r.frames,
           coverage_pct:r.pct,covered_km2:r.km2,estimated_GB:r.gb});
       });
       if(rows.length){
@@ -330,22 +346,22 @@ function runAll(){
       return;
     }
     var p=ps[i];runStatus.setValue('正在计算 '+p.label+'（'+(i+1)+' / '+ps.length+'）……');
-    var analysis=computePeriod(base,roi,p,scale);
+    var analysis=computePeriod(base,roi,p,scale,cloudLimit);
     analysis.summary.evaluate(function(v,error){
       if(run!==activeRun)return;
       if(error||!v||!v.total){
         resultPanel.add(txt(p.label+'：计算失败。'+(error||'结果为空')+'；可增大统计尺度。','#B45309'));
         next(i+1);return;
       }
-      var scenes=Number(v.scenes)||0,frames=Number(v.frames)||0;
+      var scenes=Number(v.scenes)||0,rawScenes=Number(v.rawScenes)||0,frames=Number(v.frames)||0;
       var km2=(Number(v.covered)||0)/1e6;
       var pct=100*(Number(v.covered)||0)/Number(v.total);
       var gb=scenes*170000*183000/(30*30)*bandN*2/1e9;
-      var entry={key:p.key,label:p.label,scenes:scenes,frames:frames,
+      var entry={key:p.key,label:p.label,scenes:scenes,rawScenes:rawScenes,frames:frames,cloudLimit:cloudLimit,
         pct:pct,km2:km2,gb:gb};
       output.push(entry);
       records[p.key]={analysis:analysis,period:p,area:area,roi:roi,run:run,entry:entry};
-      resultPanel.add(txt(p.label+'：'+scenes+' 景｜'+frames+' 分幅｜覆盖率 '+
+      resultPanel.add(txt(p.label+'（'+cloudCaption+'）：筛选前 '+rawScenes+' 景 → 筛选后 '+scenes+' 景｜'+frames+' 分幅｜覆盖率 '+
         pct.toFixed(2)+'%｜覆盖面积 '+km2.toFixed(1)+' km²｜估算 '+gb.toFixed(1)+' GB',
         '#1F4D72','12px'));
       addManaged(analysis.cover.selfMask(),{palette:['267FBD']},p.label+' 产品覆盖',i===0);
@@ -498,5 +514,5 @@ function makeAsset(){
   });
 }
 loadAssetRoots();
-print('全国 Landsat 覆盖分析 V3.0 已初始化。');
-print('提示：GAUL 2015 为历史行政区数据；数据体量为理论估算；多选结果逐项计算。');
+print('全国 Landsat 覆盖分析 V3.1 已初始化（支持检索阶段整景云量筛选）。');
+print('提示：云量使用 CLOUD_COVER 整景元数据，筛选后仍按非Fill像元统计覆盖；GAUL 2015 为历史行政区数据。');
