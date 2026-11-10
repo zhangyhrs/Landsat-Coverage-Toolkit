@@ -7,7 +7,7 @@
 
 **Google Earth Engine · Landsat Collection 2 · Interactive GUI**
 
-[中文说明](#中文说明) · [English](#english) · [使用教程 / Guide](docs/usage.md) · [Coverage Explorer](gee/coverage_explorer.js) · [Product Selector](gee/product_selector.js)
+[🇨🇳 中文](README_CN.md) · [🇺🇸 English](README.md) · [中英同页](#中文说明) · [使用教程 / Guide](docs/usage.md) · [Coverage Explorer](gee/coverage_explorer.js) · [Product Selector](gee/product_selector.js)
 
 ![Status](https://img.shields.io/badge/status-beta-orange) ![Platform](https://img.shields.io/badge/platform-Google%20Earth%20Engine-1967D2) ![Language](https://img.shields.io/badge/language-JavaScript-F7DF1E)
 
@@ -104,6 +104,27 @@ Landsat-Coverage-Toolkit/
     ├── coverage_explorer.js
     └── product_selector.js
 ```
+
+## 📬 Connect / 联系与交流
+
+<table align="center">
+  <tr>
+    <th width="33%">WeChat Official Account<br>微信公众号：测绘地信</th>
+    <th width="33%">WeChat Mini Program<br>微信小程序：测绘地信</th>
+    <th width="33%">Knowledge Planet<br>知识星球：测绘地理信息共享中心</th>
+  </tr>
+  <tr>
+    <td align="center" valign="middle"><img src="https://raw.githubusercontent.com/zhangyhrs/GeoStar-Selector-QGIS/main/assets/wechat-official-account.png" alt="微信公众号：测绘地信" height="150"></td>
+    <td align="center" valign="middle"><img src="https://raw.githubusercontent.com/zhangyhrs/GeoStar-Selector-QGIS/main/assets/wechat-mini-program.jpg" alt="微信小程序：测绘地信" height="150"></td>
+    <td align="center" valign="middle"><img src="https://raw.githubusercontent.com/zhangyhrs/GeoStar-Selector-QGIS/main/assets/knowledge-planet.jpg" alt="知识星球：测绘地理信息共享中心" height="150"></td>
+  </tr>
+</table>
+
+<div align="center">
+
+[![GitHub](https://img.shields.io/badge/GitHub-@zhangyhrs-181717?style=flat-square&logo=github&logoColor=white)](https://github.com/zhangyhrs)
+
+</div>
 
 ## 贡献与许可 / Contributing & License
 
