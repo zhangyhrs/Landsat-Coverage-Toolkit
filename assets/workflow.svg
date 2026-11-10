@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="330" viewBox="0 0 1200 330">
+<rect width="1200" height="330" rx="22" fill="#F5F8FC"/>
+<text x="45" y="55" font-family="Arial,sans-serif" font-weight="bold" font-size="28" fill="#173F67">LANDSAT COVERAGE TOOLKIT</text>
+<text x="45" y="83" font-family="Arial,sans-serif" font-size="16" fill="#57718B">Two-stage workflow  |  Coverage explorer + Product selector</text>
+<g font-family="Arial,sans-serif">
+<rect x="45" y="115" width="310" height="164" rx="18" fill="#FFFFFF" stroke="#C8D9E7" stroke-width="2"/>
+<rect x="65" y="136" width="48" height="48" rx="11" fill="#D9E9F6"/><text x="77" y="170" font-size="23" fill="#165D95">01</text>
+<text x="130" y="160" font-size="21" font-weight="bold" fill="#173F67">Search &amp; Analyze</text>
+<text x="65" y="206" font-size="16" fill="#4B6985">Landsat 8 / Landsat 9</text><text x="65" y="233" font-size="16" fill="#4B6985">Monthly / Quarterly</text><text x="65" y="260" font-size="16" fill="#4B6985">Area &amp; coverage statistics</text>
+<path d="M371 194H413" stroke="#2388BA" stroke-width="5" stroke-linecap="round"/><path d="m401 182 14 12-14 12" fill="none" stroke="#2388BA" stroke-width="5" stroke-linecap="round"/>
+<rect x="432" y="115" width="320" height="164" rx="18" fill="#FFFFFF" stroke="#C8D9E7" stroke-width="2"/>
+<rect x="452" y="136" width="48" height="48" rx="11" fill="#D5F2ED"/><text x="464" y="170" font-size="23" fill="#168C82">02</text>
+<text x="518" y="160" font-size="21" font-weight="bold" fill="#173F67">Scene Index</text>
+<text x="452" y="206" font-size="16" fill="#4B6985">Product ID + Path / Row</text><text x="452" y="233" font-size="16" fill="#4B6985">Footprints: GeoJSON / SHP</text><text x="452" y="260" font-size="16" fill="#4B6985">Coverage map: PNG</text>
+<path d="M768 194H810" stroke="#2388BA" stroke-width="5" stroke-linecap="round"/><path d="m798 182 14 12-14 12" fill="none" stroke="#2388BA" stroke-width="5" stroke-linecap="round"/>
+<rect x="829" y="115" width="326" height="164" rx="18" fill="#FFFFFF" stroke="#C8D9E7" stroke-width="2"/>
+<rect x="849" y="136" width="48" height="48" rx="11" fill="#FCE7D6"/><text x="861" y="170" font-size="23" fill="#CA722B">03</text>
+<text x="915" y="160" font-size="21" font-weight="bold" fill="#173F67">Select &amp; Export</text>
+<text x="849" y="206" font-size="16" fill="#4B6985">Select existing scenes</text><text x="849" y="233" font-size="16" fill="#4B6985">Preview RGB imagery</text><text x="849" y="260" font-size="16" fill="#4B6985">GeoTIFF export to Drive</text>
+</g></svg>
