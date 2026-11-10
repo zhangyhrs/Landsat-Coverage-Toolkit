@@ -46,6 +46,12 @@
 
 ![GEE 真实运行界面](assets/gee-runtime.webp)
 
+### GEE Assets 自动保存接合表（实际运行截图）
+
+![GEE Assets 自动保存接合表（真实运行截图） / GEE Asset auto-save runtime](assets/gee-asset-export-runtime.webp)
+
+保存任务在 GEE Tasks 中运行完成后，升级后的 [选景下载 GUI](gee/product_selector.js) 可以自动发现 `Landsat_Coverage_Indexes` 文件夹中的接合表，直接选择和加载，不用手动复制完整 Asset ID。
+
 *实际运行截图：2025 年第三季度 Landsat 产品覆盖率分析，含一级折叠菜单、统计结果和空间覆盖分布。*
 
 ### QGIS 影像接合表成果
@@ -86,6 +92,7 @@ Landsat-Coverage-Toolkit/
 ├── LICENSE
 ├── assets/
 │   ├── workflow.svg
+│   ├── gee-asset-export-runtime.webp
 │   ├── gee-runtime.webp
 │   ├── qgis-scene-index.webp
 │   └── gui-preview.svg
