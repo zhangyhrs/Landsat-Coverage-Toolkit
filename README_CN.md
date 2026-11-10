@@ -22,7 +22,7 @@
 **Landsat Coverage Toolkit** 面向 Landsat 8/9 遥感影像产品的检索、覆盖情况统计及选景导出，包含两套独立的 GEE Code Editor 脚本：
 
 1. **覆盖分析工具**：根据年份、卫星和行政区范围，按季度或月份多选统计产品景数、覆盖范围、面积、独立 WRS Path/Row 分幅及理论数据量。
-2. **选景导出工具**：导入已有矢量接合表或产品编号，逐景勾选、浏览影像，并创建 Google Drive GeoTIFF 导出任务。
+2. **选景导出工具**：自动读取 `Landsat_Coverage_Indexes` 文件夹中的接合表，也可输入 Asset ID 或产品编号，逐景勾选、浏览影像，并创建 Google Drive GeoTIFF 导出任务。
 
 ![工作流程](assets/workflow.svg)
 
@@ -62,7 +62,7 @@
 2. 新建脚本，复制 [`gee/coverage_explorer.js`](gee/coverage_explorer.js) 的全部代码，点击 **Run**。
 3. 选择年份、影像数据源、省级行政区及一个或多个季度、月份，运行覆盖率统计。
 4. 在图层管理、下载菜单中查看覆盖分布、导出 PNG、GeoJSON、SHP 或 CSV。
-5. 需要选择已有产品时，运行 [`gee/product_selector.js`](gee/product_selector.js)，输入接合表 GEE Asset 路径或粘贴 `LANDSAT_PRODUCT_ID`，按景勾选并启动 GeoTIFF 导出。
+5. 需要选择已有产品时，运行 [`gee/product_selector.js`](gee/product_selector.js)，从项目中选择已保存的接合表（或输入 GEE Asset 路径、粘贴 `LANDSAT_PRODUCT_ID`），按景勾选并启动 GeoTIFF 导出。
 
 更多说明参见 [使用指南](docs/usage.md)。
 
