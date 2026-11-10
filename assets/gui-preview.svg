@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="660" viewBox="0 0 1200 660">
+<rect width="1200" height="660" rx="18" fill="#F2F6FA"/>
+<rect x="24" y="26" width="1152" height="605" rx="18" fill="#fff" stroke="#D2DFE9" stroke-width="2"/>
+<rect x="24" y="26" width="365" height="605" rx="18" fill="#fff"/>
+<rect x="24" y="26" width="365" height="90" rx="18" fill="#174E7D"/>
+<text x="52" y="67" font-family="Arial,sans-serif" font-weight="bold" font-size="24" fill="white">Landsat Explorer</text>
+<text x="52" y="93" font-family="Arial,sans-serif" font-size="14" fill="#DBEAF4">Google Earth Engine GUI</text>
+<g font-family="Arial,sans-serif" font-size="17" font-weight="bold" fill="#28547A">
+<rect x="46" y="136" width="315" height="54" rx="10" fill="#EAF3FA"/><text x="65" y="170">⌄  01  Satellite &amp; time</text>
+<rect x="46" y="202" width="315" height="54" rx="10" fill="#EAF3FA"/><text x="65" y="236">⌄  02  Administrative area</text>
+<rect x="46" y="268" width="315" height="54" rx="10" fill="#EAF3FA"/><text x="65" y="302">›  03  Analysis options</text>
+<rect x="46" y="334" width="315" height="54" rx="10" fill="#EAF3FA"/><text x="65" y="368">⌄  04  Coverage results</text>
+<rect x="46" y="400" width="315" height="54" rx="10" fill="#EAF3FA"/><text x="65" y="434">›  05  Layer manager</text>
+<rect x="46" y="466" width="315" height="54" rx="10" fill="#EAF3FA"/><text x="65" y="500">›  06  Export</text>
+</g>
+<rect x="49" y="543" width="308" height="51" rx="12" fill="#167EAA"/><text x="114" y="576" font-family="Arial,sans-serif" font-weight="bold" font-size="18" fill="white">Run Analysis</text>
+<rect x="400" y="36" width="765" height="584" rx="12" fill="#E2EAF0"/>
+<g fill="none" stroke="#B5C9D6" stroke-width="3" opacity=".8"><path d="M430 570 510 480 620 500 710 370 865 360 1030 230 1165 255"/><path d="M415 200 560 260 680 190 825 255 1000 170 1140 175"/><path d="M470 120 530 200 620 225 670 330 770 360 820 540"/></g>
+<path d="M495 323 538 235 611 265 640 220 715 240 741 205 808 231 846 191 925 218 1010 242 1060 300 1104 348 1078 409 1028 418 1004 468 933 480 874 445 811 479 758 456 681 472 620 433 552 446 506 385Z" fill="#62ACD2" stroke="#1678AC" stroke-width="4"/>
+<path d="M642 312 703 274 767 301 810 274 870 302 855 360 781 389 720 373Z" fill="#2389B9" opacity=".7"/>
+<rect x="770" y="548" width="365" height="48" rx="12" fill="#FFFFFF" opacity=".95"/>
+<rect x="790" y="564" width="16" height="16" rx="2" fill="#62ACD2"/>
+<text x="817" y="579" font-family="Arial,sans-serif" font-size="17" fill="#33536E">Imagery product coverage</text>
+<text x="515" y="61" font-family="Arial,sans-serif" font-size="16" font-weight="bold" fill="#28547A">GUI ILLUSTRATION · NOT A LIVE SCREENSHOT</text>
+</svg>
