@@ -200,7 +200,7 @@ function refreshSavedIndexes() {
     autoAssetStatus.setValue('请先选择有效项目。');
     return;
   }
-  var folder=root.replace(/\\/$/,'')+'/Landsat_Coverage_Indexes';
+  var folder=root.replace(/\/$/,'')+'/Landsat_Coverage_Indexes';
   autoAssetStatus.setValue('正在读取 '+folder+' ……');
   var allAssets=[];
   function fetchPage(token) {
