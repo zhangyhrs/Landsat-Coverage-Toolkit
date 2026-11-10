@@ -11,7 +11,7 @@
 结果包括景数、不同 WRS Path/Row 组合数、覆盖率、覆盖面积和估算未压缩数据量。可在图层管理中切换覆盖图，通过下载菜单按时段生成 PNG、GeoJSON、CSV，或提交 SHP 到 Google Drive 的 Tasks。
 
 ### 3. 已有产品接合表下载
-在 Code Editor 运行 [product_selector.js](../gee/product_selector.js)。将带 `PRODUCT_ID` 的逐景接合表上传至 **GEE Assets** 并填写 Asset 路径，或从 CSV 粘贴产品 ID（支持逗号/空格分隔）。逐景勾选后可以预览，并在 Tasks 中启动 GeoTIFF 导出。单批导出任务数量限制在脚本的 `maxTaskCount` 配置中。
+在 Code Editor 运行 [product_selector.js](../gee/product_selector.js)。在覆盖分析 GUI 中保存接合表至 `Landsat_Coverage_Indexes` 文件夹；选景下载 GUI 会自动列出项目内的接合表，选择后点击加载。也可手动输入 Asset ID 或从 CSV 粘贴产品 ID（支持逗号/空格分隔）。逐景勾选后可以预览，并在 Tasks 中启动 GeoTIFF 导出。单批导出任务数量限制在脚本的 `maxTaskCount` 配置中。
 
 ### 4. 字段要求
 接合表主键字段为 `PRODUCT_ID`，匹配 GEE 影像属性 `LANDSAT_PRODUCT_ID`。其余信息可包括 `SCENE_ID`、`DATE`、`SATELLITE`、`WRS_PATH`、`WRS_ROW`、`CLOUD_PCT`。
@@ -32,7 +32,7 @@ A Google Earth Engine account with an available Cloud Project; no local Python i
 Copy [coverage_explorer.js](../gee/coverage_explorer.js) to the Code Editor, select the satellite source, year, geographic area, and one or several quarters/months. Run the analysis and inspect coverage and scene-count summaries. Create PNG, GeoJSON, CSV links, or start SHP export tasks as needed.
 
 ### Product Selector
-Load [product_selector.js](../gee/product_selector.js). Provide the GEE Asset path of a scene index with a `PRODUCT_ID` property or paste product identifiers. Select images, preview RGB, and launch GeoTIFF export tasks via the **Tasks** pane.
+Load [product_selector.js](../gee/product_selector.js). Automatically select a saved Table Asset from the `Landsat_Coverage_Indexes` folder, enter its Asset ID, or paste product identifiers. Select images, preview RGB, and launch GeoTIFF export tasks via the **Tasks** pane.
 
 ### Notes
 Coverage uses non-Fill observations without cloud masking. GAUL 2015 boundaries are historical. Estimated GB values are theoretical and uncompressed. A GEE-exported GeoTIFF is not an original USGS product archive. For errors, check permissions, Cloud Project configuration, and Earth Engine usage quotas.
