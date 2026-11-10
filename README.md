@@ -23,6 +23,10 @@
 
 本项目包含两个独立的 Google Earth Engine（GEE）交互式脚本，用于 Landsat 8/9 产品覆盖情况检索分析，以及从已有影像接合表中按产品编号选择与导出影像。
 
+### Cloud filtering during coverage analysis (V3.1) / 检索阶段云量筛选
+
+The Coverage Explorer now filters the Landsat collection by **whole-scene `CLOUD_COVER`** *before* computing scene counts, unique WRS frames, product coverage, estimated data volume, and scene-index exports. Options are unrestricted, ≤80%, ≤50%, ≤30%, ≤20%, ≤10%, ≤5%, or ≤0%. Results show **scene counts before → after filtering**. The mask used for product coverage remains non-Fill only; filtering scenes **does not produce cloud-free pixel coverage**.
+
 ### 核心功能
 
 | 模块 | 功能 |
