@@ -189,9 +189,17 @@ var linkPanel=ui.Panel();
 pFiles.add(button('生成所选时段 PNG 链接',makePNG));
 pFiles.add(button('生成所选时段接合表 GeoJSON',makeGeoJSON));
 pFiles.add(button('生成所选时段产品清单 CSV',makeCSV));
-pFiles.add(button('导出所选时段接合表 SHP（Tasks）',makeSHP));
+pFiles.add(button('导出完整 SHP（到 Google Drive / Tasks）',makeSHP));
+pFiles.add(txt('SHP 包含 .shp / .shx / .dbf / .prj 等配套文件。请从 Drive 下载同名前缀的全部文件，并在本地压缩为 ZIP；单独的 .cpg 不是矢量接合表。','#64748B','11px'));
+pFiles.add(txt('GEE Assets 直接保存（推荐用于后续选景下载）','#475569'));
+var assetIdBox = ui.Textbox({
+  placeholder:'projects/你的GEE项目/assets/Landsat_Index_2025_Q3',
+  style:{stretch:'horizontal'}
+});
+pFiles.add(assetIdBox);
+pFiles.add(button('保存当前接合表到 GEE Assets（Tasks）',makeAsset));
 pFiles.add(linkPanel);
-pFiles.add(txt('直链过大可能失败；SHP 可通过 Tasks 导出。多时段PNG请逐个选择生成。','#64748B','11px'));
+pFiles.add(txt('GeoJSON 是单文件完整矢量格式；SHP 是多文件格式。多时段 PNG 请逐个选择生成。','#64748B','11px'));
 
 // ============= 七、影像处理 =============
 function getArea(){
@@ -412,11 +420,32 @@ function makeCSV(){
 }
 function makeSHP(){
   var r=chosen();if(!r)return;
-  Export.table.toDrive({collection:getIndex(r.analysis.col),
-    description:'Landsat_Index_'+r.period.key,
-    folder:'GEE_Landsat_Index',fileNamePrefix:'Landsat_Index_'+r.period.key,
-    fileFormat:'SHP'});
-  linkPanel.add(txt('SHP任务已提交到 GEE Tasks，请在右侧 Tasks 中点击 RUN。','#0E766E'));
+  var prefix='Landsat_Index_'+r.period.key;
+  // Google Drive 任务会输出一组同名前缀的 SHP 组成文件。
+  Export.table.toDrive({
+    collection:getIndex(r.analysis.col),
+    description:prefix,
+    folder:'GEE_Landsat_Index',
+    fileNamePrefix:prefix,
+    fileFormat:'SHP',
+    selectors:['PRODUCT_ID','SCENE_ID','DATE','SATELLITE','WRS_PATH','WRS_ROW','CLOUD_PCT']
+  });
+  linkPanel.add(txt('已在 Tasks 创建 SHP 导出任务。请在 GEE Tasks 中点击 RUN；任务完成后到 Google Drive 的 GEE_Landsat_Index 文件夹中下载同名前缀的 .shp、.shx、.dbf、.prj（以及可能的 .cpg），本地一起压缩为 ZIP。只下载 .cpg 不可使用。','#0E766E'));
+}
+function makeAsset(){
+  var r=chosen();if(!r)return;
+  var assetId=(assetIdBox.getValue()||'').trim();
+  if(!/^projects\\/[^/]+\\/assets\\/[^/]+/.test(assetId)){
+    linkPanel.add(txt('请填写完整 GEE Asset ID，例如 projects/你的项目/assets/Landsat_Index_2025_Q3。','#B45309'));
+    return;
+  }
+  var prefix='Index_Asset_'+r.period.key;
+  Export.table.toAsset({
+    collection:getIndex(r.analysis.col),
+    description:prefix,
+    assetId:assetId
+  });
+  linkPanel.add(txt('GEE Asset 任务已创建。请到 Tasks 点击 RUN；完成后复制 Asset ID 至已有产品选景 GUI。','#0E766E'));
 }
 print('全国 Landsat 覆盖分析 V3.0 已初始化。');
 print('提示：GAUL 2015 为历史行政区数据；数据体量为理论估算；多选结果逐项计算。');
