@@ -105,6 +105,9 @@ Open the [Earth Engine Code Editor](https://code.earthengine.google.com/), copy 
 
 Coverage is defined by non-Fill product pixels **without cloud masking**. FAO GAUL 2015 boundaries are historical and not authoritative for current administrative reporting. Data sizes are theoretical **uncompressed estimates**, not download package sizes. Exported GEE GeoTIFFs are **not equivalent to original USGS Level-2 product archives**. Runtime behavior depends on Earth Engine quotas and permissions.
 
+
+> **Scene cloud filter / 整景云量筛选（V1.2）:** The Product Selector can filter indexed products by `CLOUD_PCT` (≤ 80/50/30/20/10/5/0%) and displays the value next to each scene ID. This is **whole-scene metadata**, not cloud cover within the selected administrative area. The filter applies to uploaded Asset records; pasted IDs are not cloud-filtered.
+
 ## 项目结构 / Structure
 
 ```text
