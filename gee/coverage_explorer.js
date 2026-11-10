@@ -435,7 +435,7 @@ function makeSHP(){
 function makeAsset(){
   var r=chosen();if(!r)return;
   var assetId=(assetIdBox.getValue()||'').trim();
-  if(!/^projects\\/[^/]+\\/assets\\/[^/]+/.test(assetId)){
+  if(assetId.indexOf('projects/') !== 0 || assetId.indexOf('/assets/') < 0){
     linkPanel.add(txt('请填写完整 GEE Asset ID，例如 projects/你的项目/assets/Landsat_Index_2025_Q3。','#B45309'));
     return;
   }
