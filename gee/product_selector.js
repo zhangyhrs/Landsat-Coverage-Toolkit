@@ -1,5 +1,5 @@
 /***************************************************************
- * Landsat 8/9 已有产品选景与导出 GUI V1.1
+ * Landsat 8/9 已有产品选景与导出 GUI V1.2
  * 适用于 GEE Code Editor (JavaScript)
  *
  * 两种导入方式：
@@ -88,6 +88,24 @@ sourceBody.add(assetText);
 var filterText = ui.Textbox({placeholder: '可选：按产品ID关键词筛选，如 202507',
   style: {stretch: 'horizontal'}});
 sourceBody.add(filterText);
+// CLOUD_PCT 来自覆盖分析工具导出的逐景接合表；表示整景云量。
+var cloudMax = ui.Select({
+  items: [
+    {label:'不限制（全部云量）',value:'100'},
+    {label:'≤ 80%',value:'80'},
+    {label:'≤ 50%',value:'50'},
+    {label:'≤ 30%',value:'30'},
+    {label:'≤ 20%',value:'20'},
+    {label:'≤ 10%',value:'10'},
+    {label:'≤ 5%',value:'5'},
+    {label:'≤ 0%（完全无云标签）',value:'0'}
+  ],
+  value:'30',
+  style:{stretch:'horizontal'}
+});
+sourceBody.add(label('最大整景云量（CLOUD_PCT）'));
+sourceBody.add(cloudMax);
+sourceBody.add(label('云量来自产品元数据，非研究区内云量。选择限制后点击加载/应用筛选；空值产品将被排除。直接粘贴 ID 时不应用此筛选。','#667085','11px'));
 sourceBody.add(action('加载接合表 / 应用筛选', loadAsset));
 sourceBody.add(label('或者直接粘贴产品ID（逗号、空格、换行分隔）：'));
 var manual = ui.Textbox({placeholder: 'LC08_L2SP_... , LC09_L2SP_...',
@@ -148,6 +166,7 @@ infoBody.add(ui.Label({value: '打开 USGS EarthExplorer',
 
 var selected = {};
 var pageIDs = [];
+var pageCloud = {};
 var page = 0;
 var totalCount = 0;
 var mode = 'none';
@@ -162,7 +181,7 @@ function refreshRows() {
   productRows.clear();
   pageIDs.forEach(function(id) {
     productRows.add(ui.Checkbox({
-      label: id, value: !!selected[id],
+      label: id + (pageCloud[id] === undefined || pageCloud[id] === null ? '  |  云量：—' : '  |  云量：' + Number(pageCloud[id]).toFixed(1) + '%'), value: !!selected[id],
       onChange: function(v) {if (v) selected[id] = true; else delete selected[id]; updateSummary();}
     }));
   });
@@ -253,7 +272,7 @@ function loadManual() {
     seen[id] = true; return true;
   });
   if (!manualIDs.length) {status.setValue('请先粘贴至少一个产品 ID。'); return;}
-  mode = 'manual'; page = 0; selected = {};
+  mode = 'manual'; page = 0; selected = {}; pageCloud = {};
   totalCount = manualIDs.length;
   openPage(0);
 }
@@ -267,6 +286,11 @@ function loadAsset() {
   fc = ee.FeatureCollection(path).filter(ee.Filter.notNull(['PRODUCT_ID']));
   var kw = (filterText.getValue() || '').trim();
   if (kw) fc = fc.filter(ee.Filter.stringContains('PRODUCT_ID', kw));
+  var cloudLimit = Number(cloudMax.getValue());
+  if (cloudLimit < 100) {
+    fc = fc.filter(ee.Filter.notNull(['CLOUD_PCT']))
+      .filter(ee.Filter.lte('CLOUD_PCT',cloudLimit));
+  }
   // 去重：同一个产品可能在接合表中有多条记录
   fc = fc.distinct(['PRODUCT_ID']).sort('PRODUCT_ID');
   fc.size().evaluate(function(n, error) {
@@ -297,13 +321,24 @@ function openPage(n) {
   var props = ee.FeatureCollection(fc.toList(CONFIG.pageSize, page * CONFIG.pageSize)
     .map(function(f) {
       f = ee.Feature(f);
-      return ee.Feature(null, {PRODUCT_ID: f.get('PRODUCT_ID')});
+      return ee.Feature(null, {
+        PRODUCT_ID: f.get('PRODUCT_ID'),
+        CLOUD_PCT: f.get('CLOUD_PCT')
+      });
     }));
-  props.aggregate_array('PRODUCT_ID').evaluate(function(arr, error) {
+  props.evaluate(function(data,error) {
     if (req !== loadVersion) return;
     if (error) {status.setValue('加载列表失败：' + error); return;}
-    pageIDs = arr || [];
-    status.setValue('接合表中共 ' + totalCount + ' 个不同产品，请勾选需要下载的影像。');
+    var features = data && data.features ? data.features : [];
+    pageIDs = [];
+    pageCloud = {};
+    features.forEach(function(item) {
+      var p = item.properties || {};
+      if (!p.PRODUCT_ID) return;
+      pageIDs.push(p.PRODUCT_ID);
+      pageCloud[p.PRODUCT_ID] = p.CLOUD_PCT;
+    });
+    status.setValue('筛选后共 ' + totalCount + ' 个不同产品；整景云量上限：' + (cloudMax.getValue()==='100'?'不限':cloudMax.getValue()+'%') + '。请勾选需要下载的影像。');
     refreshRows();
   });
 }
@@ -390,5 +425,5 @@ function printSelected() {
 }
 
 refreshAssetRoots();
-print('已有产品选景导出 GUI V1.1 已加载。');
+print('已有产品选景导出 GUI V1.2 已加载（整景云量筛选）。');
 print('说明：GeoTIFF 为 GEE 重导出，不等于 USGS 官方原版 TAR 包。');
