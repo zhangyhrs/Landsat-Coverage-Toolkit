@@ -29,7 +29,7 @@
 | --- | --- |
 | **影像覆盖分析** [`coverage_explorer.js`](gee/coverage_explorer.js) | Landsat 8、Landsat 9 或合并检索；选择年份、全国省级行政区及 GAUL 第二级单位；季度/月度多选；逐时段覆盖率、覆盖面积、景数、WRS Path/Row 数量和理论数据量 |
 | **成果展示与导出** | 图层折叠管理；覆盖图 PNG；逐景矢量接合表 GeoJSON / SHP；产品属性 CSV |
-| **已有产品选景** [`product_selector.js`](gee/product_selector.js) | 读取含 `PRODUCT_ID` 字段的 GEE 矢量 Asset，或粘贴产品 ID；分页勾选、预览、按波段输出 GeoTIFF |
+| **已有产品选景** [`product_selector.js`](gee/product_selector.js) | 自动浏览 `Landsat_Coverage_Indexes` 中已保存的接合表，也可输入 Asset 路径或粘贴产品 ID；分页勾选、预览、按波段输出 GeoTIFF |
 
 **默认设置：** 西藏自治区 / Landsat 8 / 2025 年 / 季度多选。计算按选定时段依次进行，尽量降低 Earth Engine 并发聚合负担。
 
@@ -89,7 +89,7 @@ This repository provides two standalone Google Earth Engine JavaScript GUI tools
 
 - **Coverage Explorer:** Select Landsat 8, Landsat 9 or both; choose a year, province or GAUL second-level administrative unit; select multiple quarters or months; summarize scene counts, unique WRS Path/Row combinations, approximate footprint coverage, and estimated uncompressed data volume.
 - **Visualization & outputs:** Collapsible panels, map layers, PNG coverage snapshots, GeoJSON/SHP scene footprints, and CSV scene metadata.
-- **Product Selector:** Load a GEE FeatureCollection asset with a `PRODUCT_ID` field or paste product IDs; choose individual scenes, preview RGB, and create GeoTIFF export tasks.
+- **Product Selector:** Automatically browse saved Table Assets under `Landsat_Coverage_Indexes`, or enter an Asset ID / paste product IDs; choose individual scenes, preview RGB, and create GeoTIFF export tasks.
 
 ### Quick start
 
