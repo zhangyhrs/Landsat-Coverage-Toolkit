@@ -441,7 +441,7 @@ function loadAssetRoots(){
       return;
     }
     var items=(roots||[]).filter(function(x){return x&&x.id;}).map(function(x){
-      return {label:x.id,value:x.id.replace(/\\/$/,'')};
+      return {label:x.id,value:x.id.replace(/\/$/,'')};
     });
     if(!items.length){
       assetRootSelect.items().reset([{label:'未发现可用 Assets 根目录',value:'__none__'}]);
@@ -461,7 +461,7 @@ function makeAsset(){
     linkPanel.add(txt('请先刷新 Assets 项目列表，选择拥有写入权限的根目录。','#B45309'));
     return;
   }
-  var folder=root.replace(/\\/$/,'')+'/Landsat_Coverage_Indexes';
+  var folder=root.replace(/\/$/,'')+'/Landsat_Coverage_Indexes';
   // 保存时自动加时间戳，避免反复导出相同时段产生重名冲突。
   var file='Landsat_Index_'+r.period.key+'_'+Date.now();
   var assetId=folder+'/'+file;
