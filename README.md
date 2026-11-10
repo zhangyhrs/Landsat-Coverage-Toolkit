@@ -110,7 +110,7 @@ Landsat-Coverage-Toolkit/
 欢迎通过 GitHub Issues 反馈问题、提供可复现的运行日志与改进建议。  
 Issues and reproducible bug reports are welcome.
 
-**License:** No open-source license has been applied yet. Public visibility alone does not grant reuse or redistribution rights; a license should be selected by the repository owner.
+**License:** [MIT License](LICENSE) (Copyright © 2026 Zhang Y.H.).
 
 ---
 <div align="center">
