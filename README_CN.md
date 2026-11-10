@@ -42,9 +42,19 @@
 
 ## 界面预览
 
-![界面结构示意](assets/gui-preview.svg)
+### GEE 覆盖率统计界面
 
-> 目前该图为 **GUI 界面结构示意**，并非 GEE 运行截图。项目尚未完成端到端实测。实际运行截图可在完成验证后加入。
+![GEE 真实运行界面](assets/gee-runtime.webp)
+
+*实际运行截图：2025 年第三季度 Landsat 产品覆盖率分析，含一级折叠菜单、统计结果和空间覆盖分布。*
+
+### QGIS 影像接合表成果
+
+![QGIS 实际影像接合表叠加效果](assets/qgis-scene-index.webp)
+
+*实际运行截图：2025 年第三季度 Landsat 逐景影像接合表叠加遥感影像底图。*
+
+> 以上均为用户提供的真实运行截图。图中结果仅对应当时的参数和环境；项目代码仍为 Beta，尚未进行全面端到端测试。
 
 ## 快速使用
 
@@ -76,6 +86,8 @@ Landsat-Coverage-Toolkit/
 ├── LICENSE
 ├── assets/
 │   ├── workflow.svg
+│   ├── gee-runtime.webp
+│   ├── qgis-scene-index.webp
 │   └── gui-preview.svg
 ├── docs/
 │   └── usage.md
