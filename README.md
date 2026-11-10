@@ -55,10 +55,20 @@
 
 ### 界面预览 / UI Preview
 
-![GUI layout illustration / 界面结构示意](assets/gui-preview.svg)
+### GEE 影像覆盖分析界面 / GEE Coverage Explorer
 
-> 上图为 **GUI 布局示意图，不是 GEE 真实运行截图**。真实截图待完成 GEE 端到端验证后更新。  
-> The illustration above is **not a runtime screenshot**. Verified screenshots will be added after testing.
+![实际 GEE 覆盖率分析界面 / Actual GEE coverage analysis interface](assets/gee-runtime.webp)
+
+*实际运行截图：2025 年第三季度产品覆盖率分析，折叠菜单、地图分布和统计结果。 / Actual GEE runtime screenshot showing the collapsible GUI, map and coverage summary.*
+
+### QGIS 影像接合表成果 / QGIS Scene Footprints
+
+![QGIS 中的 Landsat 影像接合表 / Landsat scene footprint index in QGIS](assets/qgis-scene-index.webp)
+
+*实际运行截图：2025 年第三季度影像接合表与底图叠加显示。 / Actual QGIS screenshot of Landsat scene footprints over imagery.*
+
+> 以上为用户提供的真实操作截图，展示特定环境与统计结果，不代表所有区域或时段的运行效果。脚本仍为 Beta，尚未开展全面端到端测试。  
+> These are real user-supplied screenshots from a specific environment; the scripts remain Beta and are not exhaustively validated.
 
 ### 数据与统计口径
 
@@ -97,6 +107,8 @@ Landsat-Coverage-Toolkit/
 ├── .gitignore
 ├── assets/
 │   ├── workflow.svg
+│   ├── gee-runtime.webp
+│   ├── qgis-scene-index.webp
 │   └── gui-preview.svg
 ├── docs/
 │   └── usage.md
