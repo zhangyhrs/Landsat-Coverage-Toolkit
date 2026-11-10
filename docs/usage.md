@@ -1,5 +1,11 @@
 # 使用指南 / User Guide
 
+## 检索阶段云量筛选 / Cloud threshold (Coverage Explorer V3.1)
+
+在覆盖分析 GUI 的“01 数据源与时间”选择最大整景云量。程序使用 Landsat 影像属性 `CLOUD_COVER` 在计算前筛选，之后所有统计和导出的接合表均基于筛选后的产品。运行结果显示筛选前与筛选后的产品景数。**整景云量筛选不等于逐像元云掩膜**。
+
+Choose the maximum whole-scene cloud cover from the first panel. The collection is filtered using the `CLOUD_COVER` property before statistics and index export. Before/after counts appear in the results. This does not mask cloudy pixels.
+
 ## 中文指南
 
 ### 1. 运行环境
